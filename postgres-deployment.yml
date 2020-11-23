@@ -3,14 +3,14 @@ kind: DeploymentConfig
 metadata:
   name: postgres-deployment
   labels:
-	app: demo-voting-app
+    app: demo-voting-app2
 spec:
   replicas: 1
   selector:
     deploymentconfig: postgres-db
   template:
     metadata:
-	  name: postgres-pod
+	 name: postgres-pod
       labels:
         name: postgres-pod
         app: demo-voting-app
