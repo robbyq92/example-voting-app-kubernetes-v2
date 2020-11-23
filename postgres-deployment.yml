@@ -10,7 +10,7 @@ spec:
     deploymentconfig: postgres-db
   template:
     metadata:
-	name: postgres-pod
+      name: postgres-pod
       labels:
         name: postgres-pod
         app: demo-voting-app
