@@ -16,11 +16,12 @@ spec:
       labels:
         name: postgres-pod
         app: demo-voting-app
-
     spec:
       containers:
       - name: postgres
         image: postgres:9.4
+        volumes:
+        - db-data:/var/lib/postgresql/data
         env:
         - name: POSTGRES_USER
           value: "postgres"
