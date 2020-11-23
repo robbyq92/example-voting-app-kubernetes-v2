@@ -1,5 +1,5 @@
 apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+kind: Deployment
 metadata:
   name: postgres-deployment
   labels:
@@ -7,7 +7,9 @@ metadata:
 spec:
   replicas: 1
   selector:
-    deploymentconfig: postgres-db
+    matchLabels:
+      name: postgres-pod
+      app: demo-voting-app
   template:
     metadata:
       name: postgres-pod
@@ -16,25 +18,20 @@ spec:
         app: demo-voting-app
     spec:
       containers:
-      - image: postgres:9.4
-        imagePullPolicy: Always
-        name: postgres-db
+      - name: postgres
+        image: postgres:9.4
+        volumes:
+        - db-data:/var/lib/postgresql/data
+	name: postgres-db-volume
+        env:
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+	   volumes:
+        - emptyDir: {}
+        name: postgres-db-volume
         ports:
         - containerPort: 5432
-          protocol: TCP
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-db-volume
-        env:
-         - name: POSTGRES_PASSWORD
-           value: "postgres"
-         - name: POSTGRES_USER
-           value: "postgres"
-         - name: POSTGRES_HOST_AUTH_METHOD
-           value: trust
-      volumes:
-      - emptyDir: {}
-        name: postgres-db-volume
-  test: false
-  triggers:
-  - type: ConfigChange
